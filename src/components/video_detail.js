@@ -1,9 +1,11 @@
 import React from 'react'; 
 
-const VideoDetail = ({video}) => {
+const VideoDetail = ({video, notFound}) => {
 
 	if(!video){
 		return <div> loading... </div>
+	} else if (notFound != false){
+		return <h1 className="notFound"> Sorry no video found ): </h1>
 	}
 
 	const videoId = video.id.videoId; 

@@ -26,3 +26,7 @@
 .list-group-item:hover {
 	background-color: #eee;
 }
+
+.notFound {
+	text-align: center; 
+}
