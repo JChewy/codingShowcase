@@ -4,9 +4,7 @@ const VideoDetail = ({video, notFound}) => {
 
 	if(!video){
 		return <div> loading... </div>
-	} else if (notFound != false){
-		return <h1 className="notFound"> Sorry no video found ): </h1>
-	}
+	} 
 
 	const videoId = video.id.videoId; 
 	const url = `https://www.youtube.com/embed/${videoId}`; 

@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash'; 
+import $ from 'jquery'; 
+// import ChessBoard from 'chessboardjs';
 import YTSearch from 'youtube-api-search'; 
 import SearchBar from './components/searchbar'; 
 import VideoList from './components/video_list'; 
 import VideoDetail from './components/video_detail';
+import Board from './components/chess_board'; 
 const API_KEY = 'AIzaSyA_1qpu2HrKoCjCTjIV3oVsmsfy_iZnUu4';
 
 
@@ -19,7 +22,7 @@ class App extends Component {
 						selectedVideo: null, 
 					}; 
 
-		this.videoSearch('chess'); 
+		this.videoSearch('kingscrusher'); 
 	}
 
 	videoSearch(term) {
@@ -40,16 +43,20 @@ class App extends Component {
 	}
 
 
+
 	render(){
 		const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 500); 
 
 
 		return(
 			<div>
+				<h3 id="search-header"> Search for your game! </h3>
 				<SearchBar onSearchTermChange={term => this.videoSearch("chess game" + term)} />
-				<VideoDetail 
-					video={this.state.selectedVideo} 
-					notFound={this.state.notFound} />
+				<div className="col-md-12 chess-container">
+					<VideoDetail video={this.state.selectedVideo} />
+					<Board id="chess-board" />
+				</div>
+				<h3 id="list-header"> Video List </h3>
 				<VideoList 
 					videos={this.state.videos} 
 					onVideoSelect={selectedVideo => this.setState({selectedVideo})}/>
@@ -58,5 +65,6 @@ class App extends Component {
 	}
 }
 
-
-ReactDOM.render(<App />, document.querySelector('.container'));
+$(document).ready(function(){
+	ReactDOM.render(<App />, document.querySelector('.container'));
+});
