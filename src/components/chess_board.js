@@ -1,25 +1,29 @@
 import React, {Component} from 'react'; 
 import ChessBoard from 'chessboardjs'; 
 import Chess from 'chess.js'; 
-// import $ from 'jquery'; 
+import $ from 'jquery'; 
 
 class Board extends Component {
 
 	constructor(props){
 		super(props); 
-
-		// componentDidMount(){
-		// }
 	}
 
 	componentDidMount(){
-		var game = new Chess(),
+
+		var position = 'start', 
+		  game = new Chess(),
 		  statusEl = $('#status'),
 		  fenEl = $('#fen'),
-		  pgnEl = $('#pgn');
+		  pgnEl = $('#pgn'), 
+		  gameHistory = [],
+		  //keeps track of what move it is to traverse game history
+		  move = 0; 
 
-		// do not pick up pieces if the game is over
-		// only pick up pieces for the side to move
+
+
+		
+
 		var onDragStart = function(source, piece, position, orientation) {
 		  if (game.game_over() === true ||
 		      (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -29,23 +33,24 @@ class Board extends Component {
 		};
 
 		var onDrop = function(source, target) {
-		  // see if the move is legal
 		  var move = game.move({
 		    from: source,
 		    to: target,
-		    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+		    promotion: 'q' 
 		  });
 
-		  // illegal move
 		  if (move === null) return 'snapback';
 
 		  updateStatus();
 		};
 
-		// update the board position after the piece snap 
-		// for castling, en passant, pawn promotion
 		var onSnapEnd = function() {
 		  board.position(game.fen());
+
+		  //creates a separate piece of memory for forwarding moves
+		  gameHistory = game.history().slice(); 
+		  console.log(game.history());
+		  move ++; 
 		};
 
 		var updateStatus = function() {
@@ -56,21 +61,17 @@ class Board extends Component {
 		    moveColor = 'Black';
 		  }
 
-		  // checkmate?
 		  if (game.in_checkmate() === true) {
 		    status = 'Game over, ' + moveColor + ' is in checkmate.';
 		  }
 
-		  // draw?
 		  else if (game.in_draw() === true) {
 		    status = 'Game over, drawn position';
 		  }
 
-		  // game still on
 		  else {
 		    status = moveColor + ' to move';
 
-		    // check?
 		    if (game.in_check() === true) {
 		      status += ', ' + moveColor + ' is in check';
 		    }
@@ -81,24 +82,68 @@ class Board extends Component {
 		  pgnEl.html(game.pgn());
 		};
 
-
-
-
 		var cfg = {
 		  draggable: true,
-		  position: 'start',
+		  position: position,
 		  onDragStart: onDragStart,
 		  onDrop: onDrop,
-		  onSnapEnd: onSnapEnd
+		  onSnapEnd: onSnapEnd, 
 		};
 
 
+		var undoMove = function(){
+			game.undo(); 
+			board.position(game.fen()); 
+			updateStatus(); 
+
+		}
+
 		const board = ChessBoard('board', cfg); 
+
+		$('#backwardBtn').on('click', function(){
+			undoMove(); 
+			move = game.history().length; 
+		});
+
+		$('#forwardBtn').on('click', function(){
+
+			game.move(gameHistory[move]); 
+
+			if(move < gameHistory.length){
+				move ++; 
+			}
+
+			board.position(game.fen()); 
+			updateStatus(); 
+		})
+
+		$('#flipBtn').on('click', function(){
+			board.flip(); 
+		})
+
 	}
 
 
+
+
+
 	render(){
-		return <div className="col-md-6" id="board" style={{width: 400}}></div>
+		return(
+			<div>
+				<div className="col-md-6" id="board" style={{width: 400}}></div>
+				<div className="col-md-6">
+					<input className="col-md-2" id="backwardBtn" type="button" value="<-" />
+					<input className="col-md-2" id="forwardBtn" type="button" value="->" />
+					<input className="col-md-2" id="flipBtn" type="button" value="flip" />
+
+				</div>
+				<div className="col-md-6">
+					<p>Status: <span id="status"></span></p>
+					<p>FEN: <span id="fen"></span></p>
+					<p>PGN: <span id="pgn"></span></p>
+				</div>
+			</div>
+		)
 	}
 
 
