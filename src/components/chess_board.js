@@ -95,7 +95,7 @@ class Board extends Component {
 		  onDrop: onDrop,
 		  onSnapEnd: onSnapEnd, 
 		};
-
+  
 
 		var undoMove = function(){
 			game.undo(); 
