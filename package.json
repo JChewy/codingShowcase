@@ -10,7 +10,7 @@
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch"
   },
-  "engines" : {
+  "engines": {
     "node": "7.0.0"
   },
   "author": "",
@@ -32,6 +32,7 @@
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
     "chess.js": "^0.10.2",
+    "chessboardjs": "0.0.1",
     "jquery": "^3.1.1",
     "lodash": "^3.10.1",
     "node-sass": "^3.13.0",
