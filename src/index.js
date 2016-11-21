@@ -56,7 +56,6 @@ class App extends Component {
 					<VideoDetail video={this.state.selectedVideo} />
 					<Board id="chess-board" />
 				</div>
-				<h3 id="list-header"> Video List </h3>
 				<VideoList 
 					videos={this.state.videos} 
 					onVideoSelect={selectedVideo => this.setState({selectedVideo})}/>

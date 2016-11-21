@@ -2,11 +2,16 @@ import React, {Component} from 'react';
 import ChessBoard from 'chessboardjs'; 
 import Chess from 'chess.js'; 
 import $ from 'jquery'; 
+import VariationList from './variation_list'; 
 
 class Board extends Component {
-
 	constructor(props){
 		super(props); 
+
+		this.state = {
+			variations:[]
+		};
+
 	}
 
 	componentDidMount(){
@@ -17,6 +22,7 @@ class Board extends Component {
 		  fenEl = $('#fen'),
 		  pgnEl = $('#pgn'), 
 		  gameHistory = [],
+		  variations = [],
 		  //keeps track of what move it is to traverse game history
 		  move = 0; 
 
@@ -98,6 +104,15 @@ class Board extends Component {
 
 		}
 
+		var saveVariation = () => {
+			variations.push(game.pgn()); 
+			this.setState({
+				variations:variations
+			});
+
+		}
+
+
 		const board = ChessBoard('board', cfg); 
 
 		$('#backwardBtn').on('click', function(){
@@ -121,6 +136,10 @@ class Board extends Component {
 			board.flip(); 
 		})
 
+		$('#saveVariation').on('click', function(){
+			saveVariation(); 
+		})
+
 	}
 
 
@@ -128,6 +147,7 @@ class Board extends Component {
 
 
 	render(){
+
 		return(
 			<div>
 				<div className="col-md-6">
@@ -135,9 +155,12 @@ class Board extends Component {
 					<input className="btn btn-default" id="backwardBtn" type="button" value="<-" />
 					<input className="btn btn-default" id="forwardBtn" type="button" value="->" />
 					<input className="btn btn-default" id="flipBtn" type="button" value="flip" />
+					<input className="btn btn-default" id="saveVariation" type="button" value="save variation" />
+
 					<p>Status: <span id="status"></span></p>
-					<p>FEN: <span id="fen"></span></p>
 					<p>PGN: <span id="pgn"></span></p>
+
+					<VariationList variations = {this.state.variations} />
 				</div>
 			</div>
 		)
