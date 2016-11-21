@@ -130,14 +130,11 @@ class Board extends Component {
 	render(){
 		return(
 			<div>
-				<div className="col-md-6" id="board" style={{width: 400}}></div>
 				<div className="col-md-6">
-					<input className="col-md-2" id="backwardBtn" type="button" value="<-" />
-					<input className="col-md-2" id="forwardBtn" type="button" value="->" />
-					<input className="col-md-2" id="flipBtn" type="button" value="flip" />
-
-				</div>
-				<div className="col-md-6">
+					<div id="board" style={{width: 400}}></div>
+					<input className="btn btn-default" id="backwardBtn" type="button" value="<-" />
+					<input className="btn btn-default" id="forwardBtn" type="button" value="->" />
+					<input className="btn btn-default" id="flipBtn" type="button" value="flip" />
 					<p>Status: <span id="status"></span></p>
 					<p>FEN: <span id="fen"></span></p>
 					<p>PGN: <span id="pgn"></span></p>
